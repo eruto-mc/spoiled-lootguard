@@ -1,0 +1,53 @@
+buildscript {
+    repositories {
+        maven { url = 'https://maven.minecraftforge.net/' }
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'org.spongepowered:mixingradle:0.7.38'
+    }
+}
+
+plugins {
+    id 'net.minecraftforge.gradle' version '[6.0.24,6.2)'
+}
+
+apply plugin: 'org.spongepowered.mixin'
+
+version = '1.0.0'
+group = 'net.erutobusiness'
+base { archivesName = 'spoiled_lootguard' }
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+minecraft {
+    mappings channel: 'official', version: '1.20.1'
+}
+
+mixin {
+    add sourceSets.main, 'spoiledlootguard.refmap.json'
+    config 'spoiledlootguard.mixins.json'
+}
+
+dependencies {
+    minecraft 'net.minecraftforge:forge:1.20.1-47.3.0'
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+    // ⚠ 当て先の解決にだけ要る（同梱しない）。手元の jar を直に指す。
+    compileOnly files('../../worlds/world-3/dev/instance/mods/Spoiled-forge-1.20.1-2.2.2.jar')
+}
+
+jar {
+    manifest {
+        attributes([
+            'Specification-Title'   : 'spoiled_lootguard',
+            'Specification-Version' : '1',
+            'Implementation-Title'  : 'Spoiled Loot Guard',
+            'Implementation-Version': project.version,
+            'MixinConfigs'          : 'spoiledlootguard.mixins.json'
+        ])
+    }
+}

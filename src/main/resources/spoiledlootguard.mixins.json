@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.erutobusiness.spoiledlootguard.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "spoiledlootguard.refmap.json",
+  "mixins": [
+    "SpoilHandlerMixin"
+  ],
+  "client": [],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

@@ -1,0 +1,61 @@
+modLoader="javafml"
+loaderVersion="[47,)"
+license="MIT"
+issueTrackerURL="https://github.com/erutobusiness"
+
+[[mixins]]
+config="spoiledlootguard.mixins.json"
+
+[[mods]]
+modId="spoiledlootguard"
+version="1.0.0"
+displayName="Spoiled Loot Guard"
+authors="erutobusiness"
+description='''
+Keeps Spoiled from forcing unopened loot containers to roll their loot.
+
+Spoiled walks every container each tick to age the food inside. For block containers it already
+skips unopened dungeon chests (RandomizableContainerBlockEntity with getLootTable() != null), but
+the entity branch - chest minecarts and chest boats - has no such check. Reading one slot of an
+unopened minecart runs vanilla's unpackChestVehicleLootTable(null), so the loot is rolled even
+though nobody opened it.
+
+That is expensive here. An abandoned mineshaft minecart rolls minecraft:chests/abandoned_mineshaft,
+which is the single condition on Alex's Caves' cabin_map loot modifier, so every roll builds an
+Underground Cabin Map. Drawing that map asks for the biome at each square, and because the cabin
+sits in unloaded terrain the lookup falls through to MultiNoiseBiomeSource and recomputes the
+terrain noise from scratch - through Tectonic's density functions and citadel's mixins.
+
+Measured on 2026-09-23: the server thread ran no ticks at all for 5 minutes 10 seconds and all
+three players were disconnected at the same instant. 89.3% of that window was this path. The same
+storm had already fired 33 times that day, every time members moved into land they had not visited.
+
+Chunky makes it worse over time: pre-generation stores only the loot table reference, not the
+contents, so every pre-generated mineshaft minecart is still unopened and waiting.
+
+This mod applies Spoiled's own block-side rule to the entity branch. Spoilage behaviour does not
+change: an unopened container holds no food yet, and once a player opens it the reference is gone
+and it is walked normally again. It also logs the location of a skipped container at most once
+every ten minutes, so the next time a storm starts there is a record of where.
+'''
+
+[[dependencies.spoiledlootguard]]
+    modId="forge"
+    mandatory=true
+    versionRange="[47,)"
+    ordering="NONE"
+    side="SERVER"
+
+[[dependencies.spoiledlootguard]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.20.1,1.20.2)"
+    ordering="NONE"
+    side="SERVER"
+
+[[dependencies.spoiledlootguard]]
+    modId="spoiled"
+    mandatory=true
+    versionRange="[2.2,)"
+    ordering="AFTER"
+    side="SERVER"
