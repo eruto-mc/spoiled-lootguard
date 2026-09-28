@@ -44,7 +44,7 @@ Measured on our server, 2026-09-23:
 | server thread stalled | **5 min 10 s (310,653 ms), 0 ticks** |
 | players disconnected | **3, within 0.1 s of each other** |
 | share of that window in this path | **89.3%** |
-| times the same storm fired that day | **33** |
+| times the same storm fired that day | **43** (33 between 12:07 and 22:16) |
 
 Chunky makes it worse over time. Pre-generation stores only the loot table reference, not the
 contents, so every pre-generated mineshaft minecart is still unopened and waiting. Region files
@@ -58,10 +58,11 @@ whose `getLootTable()` is still set, the spoilage pass skips it.
 Spoilage behaviour does not change. An unopened container holds no food yet, so there is nothing
 to age; once a player opens it the reference is cleared and it is walked normally from then on.
 
-It also logs the location of a skipped container, at most one line per ten minutes:
+It also logs the location of a skipped container, at most one line per ten minutes
+(this one is from our server, 2026-09-28, when we checked the mod with a single test minecart):
 
-```
-未開封の入れ物を腐敗の巡回から外した: entity.minecraft.chest_minecart @ minecraft:overworld [-3104, 26, 1488]（前回の記録から 7 件 ／ 通算 7 件）
+```text
+[28Sep2026 12:51:56.241] [Server thread/INFO] [spoiledlootguard/]: 未開封の入れ物を腐敗の巡回から外した: entity.minecraft.chest_minecart @ minecraft:overworld [8, 250, 8]（前回の記録から 1 件 ／ 通算 1 件）
 ```
 
 That line exists because when we investigated the stall we could tell *what* had been touched but
