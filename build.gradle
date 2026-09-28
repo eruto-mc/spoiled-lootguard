@@ -33,11 +33,22 @@ mixin {
     config 'spoiledlootguard.mixins.json'
 }
 
+repositories {
+    // MOD の依存を取る maven。手元に jar を置かずに、clone しただけでビルドできるようにするため
+    maven {
+        name = "Modrinth"
+        url = "https://api.modrinth.com/maven"
+        content { includeGroup "maven.modrinth" }
+    }
+}
+
 dependencies {
     minecraft 'net.minecraftforge:forge:1.20.1-47.3.0'
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
-    // ⚠ 当て先の解決にだけ要る（同梱しない）。手元の jar を直に指す。
-    compileOnly files('../../worlds/world-3/dev/instance/mods/Spoiled-forge-1.20.1-2.2.2.jar')
+    // ⚠ 当て先の解決にだけ要る（同梱しない。利用者が入れている Spoiled 本体に当てる）。
+    // ⚠ 版番号ではなく版 ID（Lo5gUKQu = Spoiled-forge-1.20.1-2.2.2.jar）で指す。
+    //    Modrinth の版番号はローダーを区別しないので、別ローダーの jar を掴むことがある。
+    compileOnly "maven.modrinth:spoiled:Lo5gUKQu"
 }
 
 jar {
