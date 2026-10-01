@@ -38,7 +38,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  * ⚠ <b>当ワールドは Tectonic の密度関数と citadel の差し込みを通るので1回が重い。</b>
  *
  * <p>⚠ <b>実測</b>: レンタルサーバが <b>5分10秒（310,653 ms）のあいだ tick を1回も進めず</b>、
- * 部員3人が同時に切断された。spark の記録で、その5分の <b>89.3% がこの経路</b>
+ * 接続が3つ同時に切れた。spark の記録で、その5分の <b>89.3% がこの経路</b>
  * （{@code SpoilHandler} → {@code CabinMapLootModifier}）だった。
  * ⚠ 同じ日に「入れ物が溢れた」警告が <b>33 件</b>出ており、部員が新しい土地へ入るたび再発していた。
  *
